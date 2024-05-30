@@ -70,12 +70,7 @@ void free_singly_linked_list(SinglyLinkedListNode *node)
     }
 }
 
-/*
- * Complete the 'reverse' function below.
- *
- * The function is expected to return an INTEGER_SINGLY_LINKED_LIST.
- * The function accepts INTEGER_SINGLY_LINKED_LIST llist as parameter.
- */
+// Complete the has_cycle function below.
 
 /*
  * For your reference:
@@ -86,21 +81,26 @@ void free_singly_linked_list(SinglyLinkedListNode *node)
  * };
  *
  */
-
-SinglyLinkedListNode *reverse(SinglyLinkedListNode *llist)
+bool has_cycle(SinglyLinkedListNode *head)
 {
-    SinglyLinkedListNode *prev = NULL;
-    SinglyLinkedListNode *current = llist;
-
-    while (current != NULL)
+    if (head == NULL || head->next == NULL)
     {
-        current->next = prev;
-        prev = current;
-        current = current->next;
+        return false;
     }
-    llist = prev;
+    SinglyLinkedListNode *slow = head;
+    SinglyLinkedListNode *fast = head;
+    while (fast != NULL && fast->next != NULL)
+    {
+        slow = slow->next;
+        fast = fast->next->next;
 
-    return llist;
+        if (slow == fast)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 int main()
@@ -113,6 +113,10 @@ int main()
 
     for (int tests_itr = 0; tests_itr < tests; tests_itr++)
     {
+        int index;
+        cin >> index;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
         SinglyLinkedList *llist = new SinglyLinkedList();
 
         int llist_count;
@@ -128,12 +132,27 @@ int main()
             llist->insert_node(llist_item);
         }
 
-        SinglyLinkedListNode *llist1 = reverse(llist->head);
+        SinglyLinkedListNode *extra = new SinglyLinkedListNode(-1);
+        SinglyLinkedListNode *temp = llist->head;
 
-        print_singly_linked_list(llist1, " ", fout);
-        fout << "\n";
+        for (int i = 0; i < llist_count; i++)
+        {
+            if (i == index)
+            {
+                extra = temp;
+            }
 
-        free_singly_linked_list(llist1);
+            if (i != llist_count - 1)
+            {
+                temp = temp->next;
+            }
+        }
+
+        temp->next = extra;
+
+        bool result = has_cycle(llist->head);
+
+        fout << result << "\n";
     }
 
     fout.close();
