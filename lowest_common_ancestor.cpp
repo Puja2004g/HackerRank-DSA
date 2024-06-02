@@ -68,7 +68,7 @@ public:
         Node *leftlca = lca(root->left, v1, v2);
         Node *rightlca = lca(root->right, v1, v2);
 
-        if (root->left != NULL && root->right != NULL)
+        if (leftlca != NULL && rightlca != NULL)
         {
             return root;
         }
